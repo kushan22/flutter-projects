@@ -58,7 +58,7 @@ class _State extends State<EditProductScreen> {
       return;
     }
 
-    // It will get all the values from Text Form Fields and can be used anywhere
+    // This saves the content of all the input fields
     _form.currentState.save();
     Provider.of<ProductsProvider>(context, listen: false)
         .addProduct(_editedProduct);
