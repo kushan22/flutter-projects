@@ -60,6 +60,23 @@ class ProductItem extends StatelessWidget {
                 product.price,
                 product.title,
               );
+              ScaffoldMessenger.of(context)
+                  .hideCurrentSnackBar(); // To hide the previous snackbar before showing the next
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    "Added to the Cart!",
+                  ),
+                  duration: Duration(
+                    seconds: 2,
+                  ),
+                  action: SnackBarAction(
+                      label: "UNDO",
+                      onPressed: () {
+                        cartData.removeQuantity(product.id);
+                      }),
+                ),
+              );
             },
             color: Theme.of(context).accentColor,
           ),

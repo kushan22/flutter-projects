@@ -15,6 +15,8 @@ class CartItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cartData = Provider.of<Cart>(context, listen: false);
+
     return Dismissible(
       key: ValueKey(id),
       background: Container(
@@ -32,8 +34,36 @@ class CartItem extends StatelessWidget {
         ),
       ),
       direction: DismissDirection.endToStart,
+      confirmDismiss: (direction) {
+        // This returns the future that is basically a navigator pop value it then calls onDismissed based on the value
+        return showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text(
+              "Are you sure",
+            ),
+            content: Text(
+              "Do you want to remove the item from the cart?",
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: Text("No"),
+              ),
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: Text("Yes"),
+              ),
+            ],
+          ),
+        );
+      },
       onDismissed: (direction) {
-        Provider.of<Cart>(context, listen: false).removeItem(productId);
+        cartData.removeItem(productId);
       },
       child: Card(
         margin: EdgeInsets.symmetric(
@@ -55,8 +85,29 @@ class CartItem extends StatelessWidget {
             subtitle: Text(
               "Total: \$${price * quantity}",
             ),
-            trailing: Text(
-              '$quantity x',
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    cartData.addItem(productId, price, title);
+                  },
+                  iconSize: 15,
+                  color: Theme.of(context).errorColor,
+                ),
+                Text(
+                  '$quantity x',
+                ),
+                IconButton(
+                  icon: Icon(Icons.remove),
+                  onPressed: () {
+                    cartData.removeQuantity(productId);
+                  },
+                  iconSize: 15,
+                  color: Theme.of(context).errorColor,
+                ),
+              ],
             ),
           ),
         ),
