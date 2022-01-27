@@ -19,6 +19,9 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context);
     final cartData = Provider.of<Cart>(context, listen: false);
+
+    final scaffold = ScaffoldMessenger.of(context);
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -41,8 +44,13 @@ class ProductItem extends StatelessWidget {
             icon: Icon(
               product.isFavorite ? Icons.favorite : Icons.favorite_border,
             ),
-            onPressed: () {
-              product.toggleFavoriteStatus();
+            onPressed: () async {
+              try {
+                await product.toggleFavoriteStatus();
+              } catch (error) {
+                scaffold.showSnackBar(
+                    SnackBar(content: Text("Could not update Favorites!!")));
+              }
             },
             color: Theme.of(context).accentColor,
           ),
