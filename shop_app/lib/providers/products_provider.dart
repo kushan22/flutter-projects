@@ -75,7 +75,7 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> fetchAndSetProducts() async {
     final url =
-        "https://flutter-projects-c08ba-default-rtdb.firebaseio.com/products.json?auth=[API_KEY]";
+        "https://flutter-projects-c08ba-default-rtdb.firebaseio.com/products.json?auth=${authToken}";
 
     try {
       final response = await http.get(url);
